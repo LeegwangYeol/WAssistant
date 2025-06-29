@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using ChatOrg;
 
 namespace ChatOrg
 {
@@ -18,6 +19,8 @@ namespace ChatOrg
             ThemeButton.Click += ToggleTheme;
             SendButton.Click += (s, e) => SendMessage();
             CloseButton.Click += CloseButton_Click;
+
+            var excuteAPI = new ExcuteAPI.ExcuteAPI();
         }
 
         private void InputBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
