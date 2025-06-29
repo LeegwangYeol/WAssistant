@@ -1,8 +1,19 @@
 {
   "version": 2,
-  "dgSpecHash": "6i4VYqvCQ+HI0Fo0SVcvmEqJbW12wvX27Lb6U/YBz47WgC6L2jv3X32eMpwFUf48HGWvWkwn4vn2PSLFnLf1WA==",
+  "dgSpecHash": "V7PtxqpL3GwFG1nOWJc9ZEIzF692re6pVL0Tn8zeGeq3Lhy8+aUKFRhD9fZ2iBlH23VLTEJqmsByL2WxDKr72Q==",
   "success": true,
   "projectFilePath": "C:\\Source\\ChatOrg\\ChatOrg\\ChatOrg.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\bpsco_93p6pse\\.nuget\\packages\\microsoft.extensions.configuration\\8.0.0\\microsoft.extensions.configuration.8.0.0.nupkg.sha512",
+    "C:\\Users\\bpsco_93p6pse\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\8.0.0\\microsoft.extensions.configuration.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\bpsco_93p6pse\\.nuget\\packages\\microsoft.extensions.configuration.fileextensions\\8.0.0\\microsoft.extensions.configuration.fileextensions.8.0.0.nupkg.sha512",
+    "C:\\Users\\bpsco_93p6pse\\.nuget\\packages\\microsoft.extensions.configuration.json\\8.0.0\\microsoft.extensions.configuration.json.8.0.0.nupkg.sha512",
+    "C:\\Users\\bpsco_93p6pse\\.nuget\\packages\\microsoft.extensions.fileproviders.abstractions\\8.0.0\\microsoft.extensions.fileproviders.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\bpsco_93p6pse\\.nuget\\packages\\microsoft.extensions.fileproviders.physical\\8.0.0\\microsoft.extensions.fileproviders.physical.8.0.0.nupkg.sha512",
+    "C:\\Users\\bpsco_93p6pse\\.nuget\\packages\\microsoft.extensions.filesystemglobbing\\8.0.0\\microsoft.extensions.filesystemglobbing.8.0.0.nupkg.sha512",
+    "C:\\Users\\bpsco_93p6pse\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512",
+    "C:\\Users\\bpsco_93p6pse\\.nuget\\packages\\system.text.encodings.web\\8.0.0\\system.text.encodings.web.8.0.0.nupkg.sha512",
+    "C:\\Users\\bpsco_93p6pse\\.nuget\\packages\\system.text.json\\8.0.0\\system.text.json.8.0.0.nupkg.sha512"
+  ],
   "logs": []
 }
