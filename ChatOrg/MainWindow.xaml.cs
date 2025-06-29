@@ -14,8 +14,17 @@ namespace ChatOrg
         {
             InitializeComponent();
             ThemeButton.Click += ToggleTheme;
-            SendButton.Click += SendMessage;
+            SendButton.Click += (s, e) => SendMessage();
             CloseButton.Click += CloseButton_Click;
+        }
+
+        private void InputBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                SendMessage();
+                e.Handled = true;
+            }
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
@@ -39,7 +48,7 @@ namespace ChatOrg
             }
         }
 
-        private void SendMessage(object sender, RoutedEventArgs e)
+        private void SendMessage(object? sender = null, RoutedEventArgs? e = null)
         {
             string message = InputBox.Text;
             if (!string.IsNullOrWhiteSpace(message))

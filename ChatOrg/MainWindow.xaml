@@ -66,7 +66,8 @@
                         </Grid.ColumnDefinitions>
                         <Border CornerRadius="8" Grid.Column="0" Margin="0,0,10,0">
                             <TextBox x:Name="InputBox" MinHeight="40" BorderThickness="0"
-                                     Background="#A0FFFFFF" FontSize="14" VerticalContentAlignment="Center"/>
+                                     Background="#A0FFFFFF" FontSize="14" VerticalContentAlignment="Center"
+                                     KeyDown="InputBox_KeyDown"/>
                         </Border>
                         <Border CornerRadius="8" Grid.Column="1">
                             <Button x:Name="SendButton" Content="전송" MinWidth="60" MinHeight="40"
