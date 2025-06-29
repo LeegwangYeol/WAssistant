@@ -46,7 +46,7 @@
                         </Border>
 
                         <!-- 메시지 리스트 -->
-                        <ScrollViewer Grid.Row="1" Margin="10">
+                        <ScrollViewer x:Name="MessageScrollViewer" Grid.Row="1" Margin="10">
                             <StackPanel x:Name="MessageList">
                                 <!-- 메시지 아이템 예시 -->
                                 <Border CornerRadius="8" Background="#C0FFFFFF" Margin="0,5" Padding="10">
@@ -87,9 +87,18 @@
             <!-- 구분선 -->
             <Rectangle Grid.Column="1" Fill="#40000000" VerticalAlignment="Stretch"/>
             
-            <!-- 오른쪽 패널 (빈 공간) -->
+            <!-- 오른쪽 패널 (대화 요약) -->
             <Border Grid.Column="2" Background="#A0FFFFFF" Margin="0,20,20,20" CornerRadius="16">
-                <!-- 여기에 오른쪽 패널 내용을 추가하세요 -->
+                <Grid Margin="15">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="대화 요약" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <TextBlock x:Name="SummaryTextBlock" TextWrapping="Wrap" FontSize="14"/>
+                    </ScrollViewer>
+                </Grid>
             </Border>
         </Grid>
     </Border>

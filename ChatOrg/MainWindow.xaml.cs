@@ -9,6 +9,8 @@ namespace ChatOrg
     public partial class MainWindow : Window
     {
         private bool isDarkTheme = false;
+        private int messageCount = 0;
+        private readonly object summaryLock = new object();
 
         public MainWindow()
         {
@@ -48,11 +50,34 @@ namespace ChatOrg
             }
         }
 
+        private void UpdateSummary(string userMessage)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                lock (summaryLock)
+                {
+                    messageCount++;
+                    string newSummary = $"{messageCount}. {userMessage}\n";
+
+                    // Append new summary to existing text
+                    if (!string.IsNullOrEmpty(SummaryTextBlock.Text))
+                    {
+                        SummaryTextBlock.Text += newSummary;
+                    }
+                    else
+                    {
+                        SummaryTextBlock.Text = newSummary;
+                    }
+                }
+            });
+        }
+
         private void SendMessage(object? sender = null, RoutedEventArgs? e = null)
         {
-            string message = InputBox.Text;
+            string message = InputBox.Text.Trim();
             if (!string.IsNullOrWhiteSpace(message))
             {
+                // Add user message to chat
                 Border msgBorder = new Border
                 {
                     CornerRadius = new CornerRadius(8),
@@ -68,7 +93,41 @@ namespace ChatOrg
                 msgStack.Children.Add(userIcon);
                 msgBorder.Child = msgStack;
                 MessageList.Children.Add(msgBorder);
+                
+                // Add to summary
+                UpdateSummary(message);
+                
+                // Clear input
                 InputBox.Text = "";
+                
+                // In a real app, you would process the message and get a response here
+                // For now, we'll simulate a simple response
+                string response = $"{message}에 대한 응답입니다.";
+                
+                // Add assistant response to chat
+                Dispatcher.Invoke(() =>
+                {
+                    Border responseBorder = new Border
+                    {
+                        CornerRadius = new CornerRadius(8),
+                        Background = new SolidColorBrush(Color.FromArgb(0xC0, 0xFF, 0xFF, 0xFF)),
+                        Margin = new Thickness(0, 5, 0, 5),
+                        Padding = new Thickness(10),
+                        HorizontalAlignment = HorizontalAlignment.Left
+                    };
+                    StackPanel responseStack = new StackPanel { Orientation = Orientation.Horizontal };
+                    Ellipse assistantIcon = new Ellipse { Width = 24, Height = 24, Fill = new SolidColorBrush(Colors.Blue), Margin = new Thickness(0, 0, 10, 0) };
+                    TextBlock responseText = new TextBlock { Text = response, VerticalAlignment = VerticalAlignment.Center };
+                    responseStack.Children.Add(assistantIcon);
+                    responseStack.Children.Add(responseText);
+                    responseBorder.Child = responseStack;
+                    MessageList.Children.Add(responseBorder);
+                    
+                    // No need to add assistant response to summary
+                    
+                    // Scroll to bottom
+                    MessageScrollViewer.ScrollToEnd();
+                });
             }
         }
     }
