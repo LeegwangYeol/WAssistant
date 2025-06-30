@@ -37,8 +37,8 @@
                         <!-- 헤더 -->
                         <Border Grid.Row="0" Background="#40FFFFFF" CornerRadius="8" Margin="10">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
-                                <TextBlock Text="Tactical Support AI" FontWeight="Bold" FontSize="18" Foreground="Black"/>
-                                <TextBlock Text="Technical Diagnostics System" Margin="10,0,0,0" Foreground="Black"/>
+                                <TextBlock Text="Schedule Check AI" FontWeight="Bold" FontSize="18" Foreground="Black"/>
+                                <TextBlock Text="Technical Support Bot" Margin="10,0,0,0" Foreground="Black"/>
                                 <TextBlock Text="ONLINE" Margin="10,0,0,0" Foreground="Green" FontWeight="Bold"/>
                                 <Button Content="🌙" x:Name="ThemeButton" Margin="10,0,0,0" Width="30" Height="30"/>
                                 <Button Content="✕" x:Name="CloseButton" Margin="10,0,0,0" Width="30" Height="30" Click="CloseButton_Click" Background="Transparent" BorderThickness="0" FontWeight="Bold" Foreground="#FF3333"/>
@@ -95,8 +95,17 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <TextBlock Text="대화 요약" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                        <TextBlock x:Name="SummaryTextBlock" TextWrapping="Wrap" FontSize="14"/>
+                    <ScrollViewer x:Name="SummaryScrollViewer" Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                        <TextBox x:Name="SummaryTextBox" 
+                               TextWrapping="Wrap" 
+                               FontSize="14"
+                               AcceptsReturn="True"
+                               VerticalScrollBarVisibility="Auto"
+                               BorderThickness="0"
+                               Background="Transparent"
+                               Padding="5"
+                               VerticalAlignment="Top"
+                               MinHeight="100"/>
                     </ScrollViewer>
                 </Grid>
             </Border>

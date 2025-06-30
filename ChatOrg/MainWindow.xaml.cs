@@ -12,6 +12,15 @@ namespace ChatOrg
         private bool isDarkTheme = false;
         private int messageCount = 0;
         private readonly object summaryLock = new object();
+        private TextBox? _summaryTextBox;
+        private ScrollViewer? _summaryScrollViewer;
+
+        // Initialize UI components after they are loaded
+        private void InitializeCustomComponents()
+        {
+            _summaryTextBox = FindName("SummaryTextBox") as TextBox;
+            _summaryScrollViewer = FindName("SummaryScrollViewer") as ScrollViewer;
+        }
 
         public MainWindow()
         {
@@ -20,7 +29,11 @@ namespace ChatOrg
             SendButton.Click += (s, e) => SendMessage();
             CloseButton.Click += CloseButton_Click;
 
-            var excuteAPI = new ExcuteAPI.ExcuteAPI();
+            // Initialize components after the window is loaded
+            this.Loaded += (s, e) => InitializeCustomComponents();
+
+            var exe = new ExcuteAPI.ExcuteAPI();
+
         }
 
         private void InputBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -59,17 +72,33 @@ namespace ChatOrg
             {
                 lock (summaryLock)
                 {
-                    messageCount++;
-                    string newSummary = $"{messageCount}. {userMessage}\n";
+                    try
+                    {
+                        if (_summaryTextBox == null) return;
+                        
+                        messageCount++;
+                        string newSummary = $"{messageCount}. {userMessage}\n";
 
-                    // Append new summary to existing text
-                    if (!string.IsNullOrEmpty(SummaryTextBlock.Text))
-                    {
-                        SummaryTextBlock.Text += newSummary;
+                        // Append new summary to existing text
+                        if (!string.IsNullOrEmpty(_summaryTextBox.Text))
+                        {
+                            _summaryTextBox.AppendText(newSummary);
+                        }
+                        else
+                        {
+                            _summaryTextBox.Text = newSummary;
+                        }
+                        
+                        // Move cursor to the end and scroll to the end
+                        _summaryTextBox.CaretIndex = _summaryTextBox.Text.Length;
+                        _summaryTextBox.ScrollToEnd();
+                        
+                        // Ensure the scroll viewer updates
+                        _summaryScrollViewer?.ScrollToEnd();
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        SummaryTextBlock.Text = newSummary;
+                        System.Diagnostics.Debug.WriteLine($"Error updating summary: {ex.Message}");
                     }
                 }
             });

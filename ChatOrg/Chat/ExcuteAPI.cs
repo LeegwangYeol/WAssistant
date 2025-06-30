@@ -27,7 +27,7 @@ namespace ExcuteAPI
                     throw new InvalidOperationException("애플리케이션 기본 경로를 확인할 수 없습니다.");
                 }
 
-                var appSettingsPath = Path.Combine(basePath, "..\\..\\..\\appsettings.json");
+                var appSettingsPath = Path.Combine(basePath, "..\\..\\..\\..\\appsettings.json");
                 var directoryPath = Path.GetDirectoryName(appSettingsPath);
                 if (string.IsNullOrEmpty(directoryPath))
                 {
@@ -35,7 +35,7 @@ namespace ExcuteAPI
                 }
                 
                 Configuration = new ConfigurationBuilder()
-                    .SetBasePath(directoryPath)
+                    .SetBasePath("C:\\Source\\ChatOrg")
                     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                     .Build();
 
@@ -73,7 +73,7 @@ namespace ExcuteAPI
         {
             using (var client = new HttpClient())
             {
-                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {_antapiKey}");
+                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {_openAIapiKey}");
 
                 var payload = new
                 {
