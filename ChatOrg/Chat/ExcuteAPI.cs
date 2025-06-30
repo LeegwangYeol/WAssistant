@@ -67,7 +67,31 @@ namespace ExcuteAPI
         }
 
         // 시스템 프롬프트(룰)
-        static readonly string systemPrompt = "너는 사용자의 긴 설명을 요약하고, 핵심만 정리해서 간결하고 명확한 한국어로 다시 전달하는 AI야.\n\n";
+        static readonly string systemPrompt = 
+@"너는 프레스 장비 점검 체크리스트를 관리하는 AI야.
+
+사용자가 '공압 접검을 추가해줘', '선 점검을 추가해줘', '축 움직임과 모션이 디버링 박스 기준 우측 100mm 가는지 점검해줘'와 같이 요청하면,  
+요청 내용을 간결하고 명확한 한국어로 정리해서 체크리스트에 들어갈 '점검 항목' 형태로 변환해줘.
+
+- 반드시 핵심만 요약해서 한 줄로 작성해.
+- 불필요한 설명이나 부연 없이, 바로 체크리스트에 쓸 수 있는 문장으로 만들어.
+- 요청이 여러 개라면, 각 항목을 번호나 리스트로 구분해서 정리해.
+- 전문용어는 정확하게 사용하고, 모호한 표현은 명확하게 바꿔줘.
+- 점검 항목 이외의 정보는 포함하지 마.
+- OpenAI 프롬프트 작성 가이드라인을 준수해.
+
+예시)
+입력: '공압 접검을 추가해줘'
+출력: '공압 접점 상태 점검'
+
+입력: '축 움직임과 모션이 디버링 박스 기준 우측 100mm 가는지 점검해줘'
+출력: '축 모션이 디버링 박스 기준 우측 100mm 이동 여부 점검'
+
+입력: '선 점검을 추가해줘, 공압 접검을 추가해줘'
+출력:
+1. 선 상태 점검
+2. 공압 접점 상태 점검
+";
 
         public static async Task<string> SendMessageAsync(string userInput, string previousResponseId = null)
         {
@@ -153,7 +177,7 @@ namespace ExcuteAPI
 
                 var payload = new
                 {
-                    model = "claude-3-opus-20240229",
+                    model = "claude-sonnet-4-20250514",
                     max_tokens = 1024,
                     messages = msgList
                 };

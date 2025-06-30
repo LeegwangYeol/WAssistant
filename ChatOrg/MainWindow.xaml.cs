@@ -103,12 +103,26 @@ namespace ChatOrg
                 }
             });
         }
+        
+private readonly object _sendMessageLock = new object();
+private bool _isProcessing = false;
 
-        private void SendMessage(object? sender = null, RoutedEventArgs? e = null)
+        private async void SendMessage(object? sender = null, RoutedEventArgs? e = null)
         {
             string message = InputBox.Text.Trim();
             if (!string.IsNullOrWhiteSpace(message))
             {
+                lock (_sendMessageLock)
+                {
+                    if (_isProcessing)
+                    {
+                        MessageBox.Show("이전 요청을 처리 중입니다. 잠시만 기다려주세요.", "알림", 
+                            MessageBoxButton.OK, MessageBoxImage.Information);
+                        return;
+                    }
+                    _isProcessing = true;
+                }
+                
                 // Add user message to chat
                 Border msgBorder = new Border
                 {
@@ -125,41 +139,74 @@ namespace ChatOrg
                 msgStack.Children.Add(userIcon);
                 msgBorder.Child = msgStack;
                 MessageList.Children.Add(msgBorder);
-                
-                // Add to summary
-                UpdateSummary(message);
-                
+
                 // Clear input
                 InputBox.Text = "";
-                
+
                 // In a real app, you would process the message and get a response here
                 // For now, we'll simulate a simple response
-                string response = $"{message}에 대한 응답입니다.";
-                
-                // Add assistant response to chat
-                Dispatcher.Invoke(() =>
+                try
                 {
-                    Border responseBorder = new Border
+                    // API 호출 및 응답 기다리기
+                    string response = await ExcuteAPI.ExcuteAPI.SendMessageAsync(message);
+
+                    // AI 응답 UI에 추가
+                    Border aiMsgBorder = new Border
                     {
                         CornerRadius = new CornerRadius(8),
-                        Background = new SolidColorBrush(Color.FromArgb(0xC0, 0xFF, 0xFF, 0xFF)),
+                        Background = new SolidColorBrush(Color.FromArgb(0xC0, 0xE9, 0xE9, 0xEB)),
                         Margin = new Thickness(0, 5, 0, 5),
                         Padding = new Thickness(10),
                         HorizontalAlignment = HorizontalAlignment.Left
                     };
-                    StackPanel responseStack = new StackPanel { Orientation = Orientation.Horizontal };
-                    Ellipse assistantIcon = new Ellipse { Width = 24, Height = 24, Fill = new SolidColorBrush(Colors.Blue), Margin = new Thickness(0, 0, 10, 0) };
-                    TextBlock responseText = new TextBlock { Text = response, VerticalAlignment = VerticalAlignment.Center };
-                    responseStack.Children.Add(assistantIcon);
-                    responseStack.Children.Add(responseText);
-                    responseBorder.Child = responseStack;
-                    MessageList.Children.Add(responseBorder);
-                    
-                    // No need to add assistant response to summary
-                    
-                    // Scroll to bottom
-                    MessageScrollViewer.ScrollToEnd();
-                });
+                    TextBlock aiMsgText = new TextBlock
+                    {
+                        Text = response,
+                        TextWrapping = TextWrapping.Wrap,
+                        Foreground = Brushes.Black
+                    };
+                    aiMsgBorder.Child = aiMsgText;
+                    MessageList.Children.Add(aiMsgBorder);
+
+                    // 요약에 추가
+                    UpdateSummary(response);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"메시지 전송 중 오류가 발생했습니다: {ex.Message}", "오류",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                finally
+                {
+                    lock (_sendMessageLock)
+                    {
+                        _isProcessing = false;
+                    }
+                }
+                // Add assistant response to chat
+                // Dispatcher.Invoke(() =>
+                // {
+                //     Border responseBorder = new Border
+                //     {
+                //         CornerRadius = new CornerRadius(8),
+                //         Background = new SolidColorBrush(Color.FromArgb(0xC0, 0xFF, 0xFF, 0xFF)),
+                //         Margin = new Thickness(0, 5, 0, 5),
+                //         Padding = new Thickness(10),
+                //         HorizontalAlignment = HorizontalAlignment.Left
+                //     };
+                //     StackPanel responseStack = new StackPanel { Orientation = Orientation.Horizontal };
+                //     Ellipse assistantIcon = new Ellipse { Width = 24, Height = 24, Fill = new SolidColorBrush(Colors.Blue), Margin = new Thickness(0, 0, 10, 0) };
+                //     TextBlock responseText = new TextBlock { Text = response, VerticalAlignment = VerticalAlignment.Center };
+                //     responseStack.Children.Add(assistantIcon);
+                //     responseStack.Children.Add(responseText);
+                //     responseBorder.Child = responseStack;
+                //     MessageList.Children.Add(responseBorder);
+
+                //     // No need to add assistant response to summary
+
+                //     // Scroll to bottom
+                //     MessageScrollViewer.ScrollToEnd();
+                // });
             }
         }
     }
