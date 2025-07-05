@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 
-namespace ExcuteAPI
+namespace ChatOrg.Chat
 {
     public class ExcuteAPI
     {

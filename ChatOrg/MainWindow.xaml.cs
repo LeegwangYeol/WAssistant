@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using ChatOrg;
+using ChatOrg.Chat;
 
 namespace ChatOrg
 {
@@ -32,7 +32,7 @@ namespace ChatOrg
             // Initialize components after the window is loaded
             this.Loaded += (s, e) => InitializeCustomComponents();
 
-            var exe = new ExcuteAPI.ExcuteAPI();
+            var exe = new ExcuteAPI();
 
         }
 
@@ -148,7 +148,7 @@ private bool _isProcessing = false;
                 try
                 {
                     // API 호출 및 응답 기다리기
-                    string response = await ExcuteAPI.ExcuteAPI.SendMessageAsync(message);
+                    string response = await ChatOrg.Chat.ExcuteAPI.SendMessageAsync(message);
 
                     // AI 응답 UI에 추가
                     Border aiMsgBorder = new Border
