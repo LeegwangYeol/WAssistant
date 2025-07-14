@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Source\\ChatOrg\\ChatOrg\\ChatOrg.csproj": {}
+    "C:\\source\\WAssistant\\ChatOrg\\ChatOrg.csproj": {}
   },
   "projects": {
-    "C:\\Source\\ChatOrg\\ChatOrg\\ChatOrg.csproj": {
+    "C:\\source\\WAssistant\\ChatOrg\\ChatOrg.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Source\\ChatOrg\\ChatOrg\\ChatOrg.csproj",
+        "projectUniqueName": "C:\\source\\WAssistant\\ChatOrg\\ChatOrg.csproj",
         "projectName": "ChatOrg",
-        "projectPath": "C:\\Source\\ChatOrg\\ChatOrg\\ChatOrg.csproj",
-        "packagesPath": "C:\\Users\\bpsco_93p6pse\\.nuget\\packages\\",
-        "outputPath": "C:\\Source\\ChatOrg\\ChatOrg\\obj\\",
+        "projectPath": "C:\\source\\WAssistant\\ChatOrg\\ChatOrg.csproj",
+        "packagesPath": "C:\\Users\\bpsco\\.nuget\\packages\\",
+        "outputPath": "C:\\source\\WAssistant\\ChatOrg\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\bpsco_93p6pse\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\bpsco\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -43,7 +44,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net8.0-windows7.0": {
@@ -89,7 +91,7 @@
               "privateAssets": "none"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

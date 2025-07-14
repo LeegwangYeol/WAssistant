@@ -11,6 +11,8 @@ namespace ChatOrg.Controls
     {
         public ChatMessageListControl? MessageListControl { get; set; }
 
+        public ChatSummaryControl? SummaryControl { get; set; }
+
         public ChatInputControl()
         {
             InitializeComponent();
@@ -38,10 +40,9 @@ namespace ChatOrg.Controls
                 string result = await ExcuteAPI.SendMessageAsync(userInput);
                 
                 // AI 응답을 메시지 리스트에 추가
-                if (MessageListControl != null)
-                {
-                    MessageListControl.AddAssistantMessage(result);
-                }
+                if (MessageListControl != null) MessageListControl.AddAssistantMessage(result);
+                
+                if (SummaryControl != null) SummaryControl.UpdateSummary(result);
             }
             catch (Exception ex)
             {

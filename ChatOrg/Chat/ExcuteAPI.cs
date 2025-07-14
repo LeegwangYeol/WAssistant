@@ -28,7 +28,7 @@ namespace ChatOrg.Chat
                     throw new InvalidOperationException("애플리케이션 기본 경로를 확인할 수 없습니다.");
                 }
 
-                var appSettingsPath = Path.Combine(basePath, "..\\..\\..\\..\\appsettings.json");
+                var appSettingsPath = Path.Combine(basePath, "C:\\Source\\WAssistant\\ChatOrg");
                 var directoryPath = Path.GetDirectoryName(appSettingsPath);
                 if (string.IsNullOrEmpty(directoryPath))
                 {
@@ -36,7 +36,7 @@ namespace ChatOrg.Chat
                 }
                 
                 Configuration = new ConfigurationBuilder()
-                    .SetBasePath("C:\\Source\\ChatOrg")
+                    .SetBasePath("C:\\Source\\WAssistant\\ChatOrg")
                     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                     .Build();
 
@@ -81,6 +81,7 @@ namespace ChatOrg.Chat
 - 점검 항목 이외의 정보는 포함하지 마.
 - OpenAI 프롬프트 작성 가이드라인을 준수해.
 
+```
 예시)
 입력: '공압 접검을 추가해줘'
 출력: '공압 접점 상태 점검'
@@ -92,6 +93,7 @@ namespace ChatOrg.Chat
 출력:
 1. 선 상태 점검
 2. 공압 접점 상태 점검
+```
 ";
 
         public static async Task<string> SendMessageAsync(string userInput, string previousResponseId = null)

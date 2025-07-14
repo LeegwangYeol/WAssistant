@@ -32,6 +32,7 @@ namespace ChatOrg
             if (InputControl != null && MessageListControl != null)
             {
                 InputControl.MessageListControl = MessageListControl;
+                InputControl.SummaryControl = SummaryControl;
             }
             
             // 컨트롤 초기화
