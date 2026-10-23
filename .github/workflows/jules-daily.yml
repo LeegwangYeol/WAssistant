@@ -38,18 +38,18 @@ jobs:
             - If you cannot settle on a safe fix, finish without changes and without a pull request.
 
             ## This repository
-            WPF chat client "ChatOrg" (`ChatOrg/ChatOrg.csproj`, `net8.0-windows`, MVVM): `Chat/ExcuteAPI.cs` calls a chat API, `Services/ChatService.cs` behind `IChatService`, `ViewModels/MainViewModel.cs`, `Commands/RelayCommand.cs`, `Converters/`, controls under `Controls/`.
+            WPF chat client "ChatOrg" (`ChatOrg/ChatOrg.csproj`, `net8.0-windows`, MVVM; all code under `ChatOrg/`): `ChatOrg/Chat/ExcuteAPI.cs` calls a chat API, `ChatOrg/Services/ChatService.cs` behind `IChatService`, `ChatOrg/ViewModels/MainViewModel.cs`, `ChatOrg/Commands/RelayCommand.cs`, `ChatOrg/Converters/`, controls under `ChatOrg/Controls/`.
 
             Setup and checks:
             - Windows-only WPF: it cannot be built or run on this Linux VM. Do not try to install .NET for it.
             - Verify by reading the code path and say so under "How it was verified".
 
             Focus:
-            - `Chat/ExcuteAPI.cs` and `Services/ChatService.cs`: HTTP error handling, disposal of `HttpClient`/responses, async calls that block the UI thread (`.Result`, `.Wait()`), cancellation; `RelayCommand` `CanExecute` re-evaluation; `MessageAlignmentConverter` null input; `MainViewModel` collection updates from a non-UI thread.
+            - `ChatOrg/Chat/ExcuteAPI.cs` and `ChatOrg/Services/ChatService.cs`: HTTP error handling, disposal of `HttpClient`/responses, async calls that block the UI thread (`.Result`, `.Wait()`), cancellation; `RelayCommand` `CanExecute` re-evaluation; `MessageAlignmentConverter` null input; `MainViewModel` collection updates from a non-UI thread.
             - API keys must never be hard-coded; if one is, mention it under "Not fixed" and do not print it.
 
             Leave alone:
-            - XAML layout and styling, `AssemblyInfo.cs`, the target framework.
+            - XAML layout and styling, `ChatOrg/AssemblyInfo.cs`, the target framework.
 
             ## Goal
             Find ONE real defect and fix it in a small, safe pull request.
@@ -73,6 +73,8 @@ jobs:
             ## Rules
             - Fix bugs only. Do not change intended behavior, public APIs, or design.
             - Do not refactor, reformat, rename, or update dependencies unless that is the fix itself.
+              Never commit lockfile changes (`package-lock.json`, `bun.lockb`, `uv.lock`, `poetry.lock`,
+              `Cargo.lock`) that installing dependencies produced; revert them before the pull request.
             - Keep the change under 100 lines and run the tests before opening the pull request.
             - Test failures that already exist on the base branch and are unrelated to your change do not
               block the pull request: open it anyway and list them under "Not fixed".
