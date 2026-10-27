@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Input;
 using ChatOrg.Commands;
 using ChatOrg.Models;
@@ -16,12 +17,19 @@ namespace ChatOrg.ViewModels
         private bool _isDarkTheme;
         private bool _isProcessing;
         private int _messageCount;
+        private readonly object _messagesLock = new object();
 
         public ObservableCollection<ChatMessage> Messages { get; } = new ObservableCollection<ChatMessage>();
         public string InputMessage
         {
             get => _inputMessage;
-            set => SetProperty(ref _inputMessage, value);
+            set
+            {
+                if (SetProperty(ref _inputMessage, value))
+                {
+                    CommandManager.InvalidateRequerySuggested();
+                }
+            }
         }
 
         public string Summary
@@ -43,6 +51,7 @@ namespace ChatOrg.ViewModels
         public MainViewModel(IChatService chatService)
         {
             _chatService = chatService ?? throw new ArgumentNullException(nameof(chatService));
+            BindingOperations.EnableCollectionSynchronization(Messages, _messagesLock);
             InitializeCommands();
         }
 
