@@ -12,7 +12,7 @@ namespace ChatOrg.Converters
             if (value is bool isUserMessage)
             return isUserMessage ? HorizontalAlignment.Right : HorizontalAlignment.Left;
             
-            return HorizontalAlignment.Left;
+            return DependencyProperty.UnsetValue;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
