@@ -5,11 +5,6 @@ on:
     # INFO : GitHub evaluates cron in UTC, not KST
     - cron: '41 21 * * *'
   workflow_dispatch:
-    inputs:
-      force:
-        description: Start a session even if a Jules PR is already open
-        type: boolean
-        default: false
 
 permissions:
   contents: read
@@ -19,29 +14,25 @@ jobs:
   jules:
     runs-on: ubuntu-latest
     steps:
-      # INFO : one Jules PR per repository at a time - while one is open the agent would re-fix the same defect,
-      #   so the day is skipped until it is merged or closed; a manual run passes the gate when force=true
-      - name: Skip while a Jules PR is open
-        id: gate
+      # INFO : the agent cannot see earlier runs' branches, so the open Jules PRs are handed to it in the prompt
+      #   and it is told to pick a different defect; the run itself is never skipped
+      - name: List open Jules PRs
         env:
           GH_TOKEN: ${{ github.token }}
-          FORCE: ${{ github.event.inputs.force }}
         run: |
-          open="$(gh pr list --repo "$GITHUB_REPOSITORY" --state open --search '"[Jules daily]" in:title' \
-                   --json number,title --jq '[.[] | select(.title | startswith("[Jules daily]"))] | length')"
-          echo "open Jules PRs: $open"
-          if [ "$open" != "0" ] && [ "$FORCE" != "true" ]; then
-            echo "::notice::skipped: $open open [Jules daily] PR(s) waiting for review"
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-          fi
+          gh pr list --repo "$GITHUB_REPOSITORY" --state open --search '"[Jules daily]" in:title' \
+             --json number,title,headRefName \
+             --jq '.[] | select(.title | startswith("[Jules daily]")) | "- #\(.number) \(.title[14:]) (branch \(.headRefName))"' \
+             > open-prs.txt
+          echo "open Jules PRs: $(grep -c . open-prs.txt || true)"
 
       - uses: actions/checkout@v5
-        if: steps.gate.outputs.skip != 'true'
         with:
+          # INFO : checkout wipes the workspace, so the list is kept outside it and copied back
+          clean: false
           fetch-depth: 30
 
       - name: Build prompt
-        if: steps.gate.outputs.skip != 'true'
         env:
           PROMPT: |
             You are the daily health checker for this repository.
@@ -56,8 +47,10 @@ jobs:
               answer you chose under "Assumptions" in the pull request body, then continue.
             - When several candidates qualify, any one is fine. Pick one and go;
               the next daily run picks up the others.
-            - Earlier daily runs may already be fixing something. Run `git branch -r` first and skip
-              any issue that an existing fix branch already addresses. Do not run `git fetch` or
+            - Earlier daily runs may already be fixing something: their open pull requests are listed
+              under "Already being fixed" at the end of this prompt. Skip every defect one of them
+              already addresses and pick something different. If everything you find is on that
+              list, finish without changes and without a pull request. Do not run `git fetch` or
               `git pull`: this environment has no GitHub credentials and the command fails.
             - If you cannot settle on a safe fix, finish without changes and without a pull request.
               Never open a pull request that changes no files: "no defects found" is a session that
@@ -80,6 +73,11 @@ jobs:
             ## Goal
             Find ONE real defect and fix it in a small, safe pull request.
             If nothing qualifies, make no changes and open no pull request.
+
+            ## Today's lens
+            __LENS__
+            Start your search there. If nothing under today's lens qualifies, fall back to the
+            priority order below. The lens changes what you look at first, not the rules.
 
             ## What to look for, in priority order
             1. Build or test failures. Install the project's dependencies first
@@ -120,15 +118,27 @@ jobs:
 
             Reminder: do not ask questions. Decide, finish, and open the pull request or stop.
         run: |
-          printf '%s\n' "$PROMPT" > prompt.txt
+          # INFO : the lens rotates by weekday in the owner's time zone so each day looks at the code from a
+          #   different angle instead of re-finding the same first defect
+          case "$(TZ=Asia/Seoul date +%u)" in
+            1) lens="Monday, security: hard-coded secrets, injection, unsafe deserialization, missing authorization checks, secrets or personal data written to logs." ;;
+            2) lens="Tuesday, resources and performance: unbounded growth (lists, caches, log files), handles never closed, N+1 queries, missing pagination or timeouts, work repeated inside loops." ;;
+            3) lens="Wednesday, untested paths: find a code path no test covers, write the test, and fix the bug it exposes; the pull request is the test plus the fix. A test alone, with no bug found, is not a pull request." ;;
+            4) lens="Thursday, error handling: swallowed exceptions, errors that return success, missing retries or timeouts on network calls, failure paths that leave state half-written." ;;
+            5) lens="Friday, configuration and dependencies: pinned versions that no longer install, config parsing and defaults, environment variable handling, build scripts and CI definitions that do not match the code." ;;
+            6) lens="Saturday, documentation versus code: README commands that do not exist, comments and docstrings that describe behavior the code no longer has, examples that do not run." ;;
+            *) lens="Sunday, free choice: follow the priority order below." ;;
+          esac
+          printf '%s\n' "$PROMPT" | sed "s|__LENS__|$lens|" > prompt.txt
           {
+            printf '\n\n## Already being fixed (open pull requests from earlier runs)\n'
+            if [ -s open-prs.txt ]; then cat open-prs.txt; else printf '(none)\n'; fi
             printf '\n\nLog of the last 20 commits (in the format of `git log --stat`):\n```\n'
             git log -20 --stat
             printf '```\n'
           } >> prompt.txt
 
       - name: Start Jules session
-        if: steps.gate.outputs.skip != 'true'
         env:
           JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
           # INFO : scheduled runs start from the default branch, manual runs from the branch picked in the Run dialog
