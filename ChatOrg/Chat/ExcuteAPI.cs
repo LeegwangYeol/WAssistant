@@ -28,7 +28,7 @@ namespace ChatOrg.Chat
                     throw new InvalidOperationException("애플리케이션 기본 경로를 확인할 수 없습니다.");
                 }
 
-                var appSettingsPath = Path.Combine(basePath, "C:\\Source\\WAssistant\\ChatOrg");
+                var appSettingsPath = basePath;
                 var directoryPath = Path.GetDirectoryName(appSettingsPath);
                 if (string.IsNullOrEmpty(directoryPath))
                 {
@@ -36,7 +36,7 @@ namespace ChatOrg.Chat
                 }
                 
                 Configuration = new ConfigurationBuilder()
-                    .SetBasePath("C:\\Source\\WAssistant\\ChatOrg")
+                    .SetBasePath(basePath)
                     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                     .Build();
 
