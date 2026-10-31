@@ -112,7 +112,8 @@ namespace ChatOrg.Chat
                 var jsonPayload = JsonSerializer.Serialize(payload, new JsonSerializerOptions { DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull });
                 var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-                var response = await client.PostAsync(apiUrl, content);
+                using var response = await client.PostAsync(apiUrl1, content);
+                response.EnsureSuccessStatusCode();
                 var responseString = await response.Content.ReadAsStringAsync();
 
                 using (JsonDocument doc = JsonDocument.Parse(responseString))
@@ -152,7 +153,8 @@ namespace ChatOrg.Chat
                 var jsonPayload = JsonSerializer.Serialize(payload);
                 var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-                var response = await client.PostAsync(apiUrl, content);
+                using var response = await client.PostAsync(apiUrl, content);
+                response.EnsureSuccessStatusCode();
                 var responseString = await response.Content.ReadAsStringAsync();
 
                 using (JsonDocument doc = JsonDocument.Parse(responseString))
@@ -188,7 +190,8 @@ namespace ChatOrg.Chat
                 var jsonPayload = JsonSerializer.Serialize(payload);
                 var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-                var response = await client.PostAsync(apiUrl, content);
+                using var response = await client.PostAsync(apiUrl, content);
+                response.EnsureSuccessStatusCode();
                 var responseString = await response.Content.ReadAsStringAsync();
 
                 using (JsonDocument doc = JsonDocument.Parse(responseString))
