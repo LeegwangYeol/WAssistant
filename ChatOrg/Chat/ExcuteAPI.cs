@@ -28,7 +28,7 @@ namespace ChatOrg.Chat
                     throw new InvalidOperationException("애플리케이션 기본 경로를 확인할 수 없습니다.");
                 }
 
-                var appSettingsPath = Path.Combine(basePath, "C:\\Source\\WAssistant\\ChatOrg");
+                var appSettingsPath = Path.Combine(basePath, "appsettings.json");
                 var directoryPath = Path.GetDirectoryName(appSettingsPath);
                 if (string.IsNullOrEmpty(directoryPath))
                 {
@@ -36,7 +36,7 @@ namespace ChatOrg.Chat
                 }
                 
                 Configuration = new ConfigurationBuilder()
-                    .SetBasePath("C:\\Source\\WAssistant\\ChatOrg")
+                    .SetBasePath(basePath)
                     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                     .Build();
 
@@ -112,7 +112,8 @@ namespace ChatOrg.Chat
                 var jsonPayload = JsonSerializer.Serialize(payload, new JsonSerializerOptions { DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull });
                 var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-                var response = await client.PostAsync(apiUrl, content);
+                using var response = await client.PostAsync(apiUrl, content);
+                response.EnsureSuccessStatusCode();
                 var responseString = await response.Content.ReadAsStringAsync();
 
                 using (JsonDocument doc = JsonDocument.Parse(responseString))
@@ -152,7 +153,8 @@ namespace ChatOrg.Chat
                 var jsonPayload = JsonSerializer.Serialize(payload);
                 var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-                var response = await client.PostAsync(apiUrl, content);
+                using var response = await client.PostAsync(apiUrl, content);
+                response.EnsureSuccessStatusCode();
                 var responseString = await response.Content.ReadAsStringAsync();
 
                 using (JsonDocument doc = JsonDocument.Parse(responseString))
@@ -188,7 +190,8 @@ namespace ChatOrg.Chat
                 var jsonPayload = JsonSerializer.Serialize(payload);
                 var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
 
-                var response = await client.PostAsync(apiUrl, content);
+                using var response = await client.PostAsync(apiUrl, content);
+                response.EnsureSuccessStatusCode();
                 var responseString = await response.Content.ReadAsStringAsync();
 
                 using (JsonDocument doc = JsonDocument.Parse(responseString))
